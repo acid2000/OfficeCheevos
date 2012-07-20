@@ -1,0 +1,25 @@
+How few tables can we get away with?
+
+CREATE TABLE available_cheevos
+(
+  Cheevo_Id int NOT NULL,
+  Name varchar(255) NOT NULL,
+  Description varchar(1024) NOT NULL,
+  Points int NOT NULL,
+  CreatedTime datetime NOT NULL,
+  CreatedBy varchar(255) NOT NULL,
+  PRIMARY KEY(Cheevo_Id)
+)
+
+CREATE TABLE popped_cheevos
+(
+  Pop_Id int NOT NULL,
+  ProposedTime datetime NOT NULL,
+  AwardedTime datetime,
+  User varchar(255) NOT NULL,
+  Cheevo_Id int NOT NULL,
+  FirstModerator varchar(255),
+  SecondModerator varchar(255),
+  PRIMARY KEY(Pop_Id),
+  FOREIGN KEY(Cheevo_Id) REFERENCES available_cheevos(Cheevo_Id)
+)
