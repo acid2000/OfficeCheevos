@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NotifyMessageDemo;
 
 namespace OfficeCheevosClient
 {
@@ -19,9 +20,17 @@ namespace OfficeCheevosClient
     /// </summary>
     public partial class MainWindow : Window
     {
+        private NotifyMessageManager notifyMessageMgr = new NotifyMessageManager(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height, 200, 150 );
+
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            var msg = new NotifyMessage("", "Office Cheevo", "Show popup on screen (100pts)", ()=> MessageBox.Show(""));
+            notifyMessageMgr.EnqueueMessage(msg);
         }
     }
 }

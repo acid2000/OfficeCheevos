@@ -1,0 +1,61 @@
+﻿<Window x:Class="NotifyMessageDemo.NotifyMessageWindow" 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:ei="clr-namespace:Microsoft.Expression.Interactivity.Media;assembly=Microsoft.Expression.Interactions"
+        AllowsTransparency="True" Background="Transparent" WindowStyle="None" WindowStartupLocation="Manual"
+        Cursor="Hand" Title="Notification Message" Height="150" Width="200">
+    <Window.Resources>
+        <Storyboard x:Key="flyinStoryboard">
+            <DoubleAnimation From="{Binding Location.FromLeft}" To="{Binding Location.ToLeft}"
+                    Storyboard.TargetProperty="(Window.Left)" Duration="0:0:1"></DoubleAnimation>
+            <DoubleAnimation From="{Binding Location.FromTop}" To="{Binding Location.ToTop}"
+                    Storyboard.TargetProperty="(Window.Top)" Duration="0:0:1"></DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="fadeInfadeOutStoryboard">
+            <DoubleAnimation Storyboard.TargetProperty="(Window.Opacity)" From="0.0" To="1.0" AutoReverse="True"
+                    AccelerationRatio="0.4" DecelerationRatio="0.6" Duration="0:0:3"></DoubleAnimation>
+        </Storyboard>
+   </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource flyinStoryboard}" />
+            <BeginStoryboard Storyboard="{StaticResource fadeInfadeOutStoryboard}" />
+        </EventTrigger>
+    </Window.Triggers>
+    <Grid>
+        <Grid Margin="5" Background="LightYellow">
+            <Grid.Resources>
+                <Style x:Key="headerTextStyle" TargetType="TextBlock">
+                    <Setter Property="FontSize" Value="14" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                    <Setter Property="Margin" Value="30 0 5 0" />
+                </Style>
+                <Style x:Key="bodyTextStyle" TargetType="TextBlock">
+                    <Setter Property="FontSize" Value="14" />
+                    <Setter Property="VerticalAlignment" Value="Top" />
+                    <Setter Property="TextWrapping" Value="Wrap" />
+                    <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                    <Setter Property="Margin" Value="10 0 10 0" />
+                </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Style="{StaticResource headerTextStyle}"    Text="{Binding Message.HeaderText}"></TextBlock>
+            <TextBlock Grid.Row="1" Style="{StaticResource bodyTextStyle}"      Text="{Binding Message.BodyText}"></TextBlock>
+        </Grid>
+        <Image Source="{Binding Message.SkinName}" Stretch="Fill" />
+    </Grid>
+    <i:Interaction.Triggers>
+        <!--<EventTrigger EventName="MouseDown">
+            <i:InvokeCommandAction Command="{Binding ClickCommand}" />
+        </EventTrigger>-->
+        <ei:StoryboardCompletedTrigger Storyboard="{StaticResource fadeInfadeOutStoryboard}">
+            <i:InvokeCommandAction Command="{Binding CloseCommand}" />
+        </ei:StoryboardCompletedTrigger>
+    </i:Interaction.Triggers>
+</Window>
