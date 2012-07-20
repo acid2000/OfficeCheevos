@@ -5,6 +5,7 @@ CREATE TABLE available_cheevos
   Cheevo_Id int NOT NULL,
   Name varchar(255) NOT NULL,
   Description varchar(1024) NOT NULL,
+  Category varchar(255) NOT NULL,
   Points int NOT NULL,
   CreatedTime datetime NOT NULL,
   CreatedBy varchar(255) NOT NULL,
