@@ -20,7 +20,7 @@ namespace OfficeCheevosClient
     /// </summary>
     public partial class MainWindow : Window
     {
-        private NotifyMessageManager notifyMessageMgr = new NotifyMessageManager(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height, 200, 150 );
+        private NotifyMessageManager notifyMessageMgr = new NotifyMessageManager(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height, 420, 96 );
 
         public MainWindow()
         {
@@ -29,7 +29,7 @@ namespace OfficeCheevosClient
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
-            var msg = new NotifyMessage("", "Office Cheevo", "Show popup on screen (100pts)", ()=> MessageBox.Show(""));
+            var msg = new NotifyMessage("/OfficeCheevosClient;component/Resources/cheevo.png", "Office Cheevo", "Show popup on screen (100pts)", () => MessageBox.Show(""));
             notifyMessageMgr.EnqueueMessage(msg);
         }
     }

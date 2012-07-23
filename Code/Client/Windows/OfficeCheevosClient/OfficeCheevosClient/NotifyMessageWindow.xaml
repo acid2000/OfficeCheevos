@@ -4,7 +4,7 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:ei="clr-namespace:Microsoft.Expression.Interactivity.Media;assembly=Microsoft.Expression.Interactions"
         AllowsTransparency="True" Background="Transparent" WindowStyle="None" WindowStartupLocation="Manual"
-        Cursor="Hand" Title="Notification Message" Height="150" Width="200">
+        Cursor="Hand" Title="Notification Message" Height="96" Width="420" Loaded="Window_Loaded">
     <Window.Resources>
         <Storyboard x:Key="flyinStoryboard">
             <DoubleAnimation From="{Binding Location.FromLeft}" To="{Binding Location.ToLeft}"
@@ -14,7 +14,7 @@
         </Storyboard>
         <Storyboard x:Key="fadeInfadeOutStoryboard">
             <DoubleAnimation Storyboard.TargetProperty="(Window.Opacity)" From="0.0" To="1.0" AutoReverse="True"
-                    AccelerationRatio="0.4" DecelerationRatio="0.6" Duration="0:0:3"></DoubleAnimation>
+                    AccelerationRatio="0.4" DecelerationRatio="0.6" Duration="0:0:5"></DoubleAnimation>
         </Storyboard>
    </Window.Resources>
     <Window.Triggers>
@@ -24,7 +24,7 @@
         </EventTrigger>
     </Window.Triggers>
     <Grid>
-        <Grid Margin="5" Background="LightYellow">
+        <Grid Margin="5" Background="White" Visibility="Visible" Opacity="0">
             <Grid.Resources>
                 <Style x:Key="headerTextStyle" TargetType="TextBlock">
                     <Setter Property="FontSize" Value="14" />
