@@ -33,6 +33,9 @@ namespace OfficeCheevosClient
         private NotifyMessageManager notifyMessageMgr = new NotifyMessageManager(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height, 420, 96 );
         private Timer updateTimer = new Timer(Settings.Default.updateTimeInSeconds * 1000);
 
+        private const string DefaultCheevoIcon = "/OfficeCheevosClient;component/Resources/defaultIcon.png";
+        private const string DefaultCheevoBackground = "/OfficeCheevosClient;component/Resources/cheevo.png";
+
         public MainWindow()
         {
             InitializeComponent();
@@ -58,7 +61,9 @@ namespace OfficeCheevosClient
                 string name = "Time to call helpdesk!";
                 var icon = OfficeCheevosClient.Properties.Resources.cheevo;
 
-                var msg = new NotifyMessage("/OfficeCheevosClient;component/Resources/cheevo.png", name, name, () => MessageBox.Show(""));
+                var msg = new NotifyMessage(
+                    DefaultCheevoBackground,
+                    name, DefaultCheevoIcon, () => MessageBox.Show(""));
                 var t = new Thread(() =>
                                    Dispatcher.Invoke(DispatcherPriority.Normal, new Action<NotifyMessage>(AddCheevo), msg));
                 t.Start();
@@ -78,7 +83,7 @@ namespace OfficeCheevosClient
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
-            var msg = new NotifyMessage("/OfficeCheevosClient;component/Resources/cheevo.png", "Office Cheevo", "Show popup on screen (100pts)", () => MessageBox.Show(""));
+            var msg = new NotifyMessage(DefaultCheevoBackground, "Show popup on screen (100pts)", DefaultCheevoIcon, () => MessageBox.Show(""));
             notifyMessageMgr.EnqueueMessage(msg);
         }
     }

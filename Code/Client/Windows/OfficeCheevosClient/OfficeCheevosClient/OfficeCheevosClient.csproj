@@ -110,6 +110,7 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\defaultIcon.png" />
     <Resource Include="Resources\cheevo.png" />
     <Content Include="Resources\cheevo_sound.wav" />
   </ItemGroup>

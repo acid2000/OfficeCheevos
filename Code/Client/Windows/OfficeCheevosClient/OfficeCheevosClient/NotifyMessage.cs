@@ -8,13 +8,14 @@ namespace NotifyMessageDemo
         private readonly string _skinName;
         private readonly string _headerText;
         private readonly string _bodyText;
+        private readonly string _iconUri;
         private readonly Action _clickAction;
 
-        public NotifyMessage(string skinName, string headerText, string bodyText, Action clickAction)
+        public NotifyMessage(string skinName, string headerText, string iconUri, Action clickAction)
         {
             _skinName       = skinName;
             _headerText     = headerText;
-            _bodyText       = bodyText;
+            _iconUri        = iconUri;
             _clickAction    = clickAction;
         }
 
@@ -31,6 +32,11 @@ namespace NotifyMessageDemo
         public string BodyText
         {
             get { return _bodyText; }
+        }
+
+        public string IconUri
+        {
+            get { return _iconUri; }
         }
 
         public Action OnClick

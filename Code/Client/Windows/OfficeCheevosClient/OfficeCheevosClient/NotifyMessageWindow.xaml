@@ -24,31 +24,26 @@
         </EventTrigger>
     </Window.Triggers>
     <Grid>
-        <Grid Margin="5" Background="White" Visibility="Visible" Opacity="0">
+        <Image Source="{Binding Message.SkinName}" Stretch="Fill" />
+        <Image Source="{Binding Message.IconUri}"  Margin="19,-5,0,0" Width="67" Height="68" HorizontalAlignment="Left" />
+        <Grid Background="Transparent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="160*" />
+                <ColumnDefinition Width="360*" />
+            </Grid.ColumnDefinitions>
             <Grid.Resources>
                 <Style x:Key="headerTextStyle" TargetType="TextBlock">
                     <Setter Property="FontSize" Value="14" />
                     <Setter Property="FontWeight" Value="Bold" />
                     <Setter Property="VerticalAlignment" Value="Center" />
                     <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-                    <Setter Property="Margin" Value="30 0 5 0" />
-                </Style>
-                <Style x:Key="bodyTextStyle" TargetType="TextBlock">
-                    <Setter Property="FontSize" Value="14" />
-                    <Setter Property="VerticalAlignment" Value="Top" />
-                    <Setter Property="TextWrapping" Value="Wrap" />
-                    <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-                    <Setter Property="Margin" Value="10 0 10 0" />
                 </Style>
             </Grid.Resources>
             <Grid.RowDefinitions>
-                <RowDefinition Height="25" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="110" />
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Style="{StaticResource headerTextStyle}"    Text="{Binding Message.HeaderText}"></TextBlock>
-            <TextBlock Grid.Row="1" Style="{StaticResource bodyTextStyle}"      Text="{Binding Message.BodyText}"></TextBlock>
+            <TextBlock Style="{StaticResource headerTextStyle}"    Text="{Binding Message.HeaderText}" Foreground="White" Grid.ColumnSpan="2" Grid.Column="1"></TextBlock>
         </Grid>
-        <Image Source="{Binding Message.SkinName}" Stretch="Fill" />
     </Grid>
     <i:Interaction.Triggers>
         <!--<EventTrigger EventName="MouseDown">
