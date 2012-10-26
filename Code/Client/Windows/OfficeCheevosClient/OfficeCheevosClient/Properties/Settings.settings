@@ -6,7 +6,7 @@
       <Value Profile="(Default)">60</Value>
     </Setting>
     <Setting Name="serverRSSURL" Type="(Web Service URL)" Scope="User">
-      <Value Profile="(Default)">http://feeds.bbci.co.uk/news/england/rss.xml</Value>
+      <Value Profile="(Default)">http://localhost:5000/listing?user=</Value>
     </Setting>
     <Setting Name="lastUpdated" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)" />

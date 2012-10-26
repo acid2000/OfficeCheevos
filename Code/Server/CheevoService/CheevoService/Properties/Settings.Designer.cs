@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace OfficeCheevosClient.Properties {
+namespace CheevoService.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -23,39 +23,22 @@ namespace OfficeCheevosClient.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("60")]
-        public int updateTimeInSeconds {
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=sample.s3db")]
+        public string ConnectionString {
             get {
-                return ((int)(this["updateTimeInSeconds"]));
-            }
-            set {
-                this["updateTimeInSeconds"] = value;
+                return ((string)(this["ConnectionString"]));
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:5000/listing?user=")]
-        public string serverRSSURL {
+        [global::System.Configuration.DefaultSettingValueAttribute("TestCheevos")]
+        public string CheevoPacksDirectory {
             get {
-                return ((string)(this["serverRSSURL"]));
-            }
-            set {
-                this["serverRSSURL"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.DateTime lastUpdated {
-            get {
-                return ((global::System.DateTime)(this["lastUpdated"]));
-            }
-            set {
-                this["lastUpdated"] = value;
+                return ((string)(this["CheevoPacksDirectory"]));
             }
         }
     }

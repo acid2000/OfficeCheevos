@@ -58,18 +58,26 @@ namespace OfficeCheevosClient
                 downloadFeed.LastUpdatedTime > Settings.Default.lastUpdated)
             {
                 // we have a new cheevo!
-                string name = "Time to call helpdesk!";
-                var icon = OfficeCheevosClient.Properties.Resources.cheevo;
+                var newCheevos =
+                    from item in downloadFeed.Items
+                    where item.PublishDate > Settings.Default.lastUpdated
+                    select item;
 
-                var msg = new NotifyMessage(
-                    DefaultCheevoBackground,
-                    name, DefaultCheevoIcon, () => MessageBox.Show(""));
-                var t = new Thread(() =>
-                                   Dispatcher.Invoke(DispatcherPriority.Normal, new Action<NotifyMessage>(AddCheevo), msg));
-                t.Start();
+                foreach (var cheevo in newCheevos)
+                {
+                    string name = cheevo.Title.Text;
+                    var icon = OfficeCheevosClient.Properties.Resources.cheevo;
+
+                    var msg = new NotifyMessage(
+                        DefaultCheevoBackground,
+                        name, DefaultCheevoIcon, () => MessageBox.Show(""));
+                    var t = new Thread(() =>
+                                       Dispatcher.Invoke(DispatcherPriority.Normal, new Action<NotifyMessage>(AddCheevo), msg));
+                    t.Start();
+                }            
             }
 
-            Settings.Default.lastUpdated = DateTime.Now;
+            Settings.Default.lastUpdated = downloadFeed.LastUpdatedTime.DateTime;
             Settings.Default.Save();
         }
 
@@ -77,7 +85,9 @@ namespace OfficeCheevosClient
         {
             if (!webClientInstance.IsBusy)
             {
-                webClientInstance.DownloadStringAsync(new Uri(Settings.Default.serverRSSURL));
+                var url = Settings.Default.serverRSSURL + Environment.UserName;
+
+                webClientInstance.DownloadStringAsync(new Uri(url));
             }
         }
 
