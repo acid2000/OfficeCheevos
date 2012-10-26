@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+//todo all this sql needs to be either parameterised or escapes otherwise we will be pwned
+
 namespace CheevoService
 {
     class Database
