@@ -5,9 +5,6 @@
     <Setting Name="updateTimeInSeconds" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">60</Value>
     </Setting>
-    <Setting Name="serverRSSURL" Type="(Web Service URL)" Scope="User">
-      <Value Profile="(Default)">http://localhost:5001/listing?user=</Value>
-    </Setting>
     <Setting Name="lastUpdated" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)" />
     </Setting>

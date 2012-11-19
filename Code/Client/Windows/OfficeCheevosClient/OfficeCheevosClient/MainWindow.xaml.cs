@@ -86,7 +86,7 @@ namespace OfficeCheevosClient
         {
             if (!webClientInstance.IsBusy)
             {
-                var url = Settings.Default.serverRSSURL + Environment.UserName;
+                var url = Settings.Default.serverURL + "listing?user=" + Environment.UserName;
 
                 webClientInstance.DownloadStringAsync(new Uri(url));
             }
