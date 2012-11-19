@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-
-//todo all this sql needs to be either parameterised or escapes otherwise we will be pwned
 
 namespace CheevoService
 {
@@ -64,27 +64,47 @@ namespace CheevoService
 
         public static void AddCheevo(string title, string description, string category, int points)
         {
-            var addCmd = string.Format("INSERT INTO available_cheevos(ID, Title, Description, Category, Points) VALUES(NULL, '{0}', '{1}', '{2}', '{3}')", title, description, category, points);
+            var addCmd = "INSERT INTO available_cheevos(ID, Title, Description, Category, Points) VALUES(NULL, @title, @description, @category, @points)";
 
-            lock (sqliteCon)
+            bool dbOpened = false;
+
+            lock (Database.sqliteCon)
             {
-                sqliteCon.Open();
-
-                using (SQLiteTransaction sqlTransaction = sqliteCon.BeginTransaction())
-                using (SQLiteCommand addCommand = new SQLiteCommand(addCmd, sqliteCon, sqlTransaction))
+                try
                 {
-                    try
+                    Database.sqliteCon.Open();
+                    dbOpened = true;
+
+                    using (SQLiteTransaction sqlTransaction = sqliteCon.BeginTransaction())
+                    using (SQLiteCommand addCommand = new SQLiteCommand(addCmd, sqliteCon, sqlTransaction))
                     {
-                        addCommand.ExecuteNonQuery();
-                        sqlTransaction.Commit();
-                    }
-                    catch
+                        addCommand.Parameters.AddWithValue("@title", title );
+                        addCommand.Parameters.AddWithValue("@description", description );
+                        addCommand.Parameters.AddWithValue("@category", category );
+                        addCommand.Parameters.AddWithValue("@points", points );
+
+                        try
+                        {
+                            addCommand.ExecuteNonQuery();
+                            sqlTransaction.Commit();
+                        }
+                        catch
+                        {
+                            // do nothing, cheevo already added
+                        }
+                    }     
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message + " " + ex.StackTrace);
+                }
+                finally
+                {
+                    if (dbOpened)
                     {
-                        // do nothing, cheevo already added
+                        Database.sqliteCon.Close();
                     }
                 }
-
-                sqliteCon.Close();
             }
         }
 
@@ -106,20 +126,35 @@ namespace CheevoService
              */
 
             const string loadCheevos = "select Title,Description,Category,Points,ID from available_cheevos";
+            bool dbOpened = false;
 
             lock (Database.sqliteCon)
             {
-                Database.sqliteCon.Open();
-
-                using (SQLiteCommand selectCommand = new SQLiteCommand(loadCheevos, Database.sqliteCon))
-                using (SQLiteDataReader dataReader = selectCommand.ExecuteReader())
+                try
                 {
-                    while (dataReader.HasRows && dataReader.Read())
+                    Database.sqliteCon.Open();
+                    dbOpened = true;
+
+                    using (SQLiteCommand selectCommand = new SQLiteCommand(loadCheevos, Database.sqliteCon))
+                    using (SQLiteDataReader dataReader = selectCommand.ExecuteReader())
                     {
-                        cheevos.Add(new Cheevo(dataReader.GetString(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetInt32(3), DateTime.MinValue, dataReader.GetInt32(4)));
+                        while (dataReader.HasRows && dataReader.Read())
+                        {
+                            cheevos.Add(new Cheevo(dataReader.GetString(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetInt32(3), DateTime.MinValue, dataReader.GetInt32(4)));
+                        }
                     }
                 }
-                Database.sqliteCon.Close();
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message + " " + ex.StackTrace);
+                }
+                finally
+                {
+                    if (dbOpened)
+                    {
+                        Database.sqliteCon.Close();
+                    }
+                }
             }
             return cheevos;
         }
@@ -131,25 +166,41 @@ namespace CheevoService
             const string loadCheevos = "select Title,Description,Category,Points,AwardedTime,User " +
                                        "from popped_cheevos inner join available_cheevos on available_cheevos.ID = popped_cheevos.ID where AwardedTime is not null";
 
+            bool dbOpened = false;
+
             lock (Database.sqliteCon)
             {
-                Database.sqliteCon.Open();
-
-                using (SQLiteCommand selectCommand = new SQLiteCommand(loadCheevos, Database.sqliteCon))
-                using (SQLiteDataReader dataReader = selectCommand.ExecuteReader())
+                try
                 {
-                    while (dataReader.HasRows && dataReader.Read())
+                    Database.sqliteCon.Open();
+                    dbOpened = true;
+
+                    using (SQLiteCommand selectCommand = new SQLiteCommand(loadCheevos, Database.sqliteCon))
+                    using (SQLiteDataReader dataReader = selectCommand.ExecuteReader())
                     {
-                        var myDate = new DateTime(dataReader.GetInt64(4));
+                        while (dataReader.HasRows && dataReader.Read())
+                        {
+                            var myDate = new DateTime(dataReader.GetInt64(4));
 
-                        var awardedCheevo = new Cheevo(dataReader.GetString(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetInt32(3), myDate, -1);
-                        var user = new CheevoUser(dataReader.GetString(5));
-                        user.Add(awardedCheevo);
+                            var awardedCheevo = new Cheevo(dataReader.GetString(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetInt32(3), myDate, -1);
+                            var user = new CheevoUser(dataReader.GetString(5));
+                            user.Add(awardedCheevo);
 
-                        dbCheevos.Add(user.Username.ToLower(), user);
+                            dbCheevos.Add(user.Username.ToLower(), user);
+                        }
                     }
                 }
-                Database.sqliteCon.Close();
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message + " " + ex.StackTrace);
+                }
+                finally
+                {
+                    if (dbOpened)
+                    {
+                        Database.sqliteCon.Close();
+                    }
+                }
             }
             return dbCheevos;
         }
@@ -157,18 +208,39 @@ namespace CheevoService
         static bool CheevoAlreadyProposed(string user, int id)
         {
             bool ret = false;
-            string loadCheevos = string.Format("select ID from popped_cheevos where CheevoID = {0} and User = '{1}' and SecondMod is null", id, user);
+            string loadCheevos = "select ID from popped_cheevos where CheevoID = @id and User = @user and SecondMod is null";
+
+            bool dbOpened = false;
 
             lock (Database.sqliteCon)
             {
-                sqliteCon.Open();
+                try
+                {
+                    Database.sqliteCon.Open();
+                    dbOpened = true;
 
-                using (SQLiteCommand selectCommand = new SQLiteCommand(loadCheevos, Database.sqliteCon))
-                using (SQLiteDataReader dataReader = selectCommand.ExecuteReader())
-                {          
-                    ret = dataReader.HasRows;
+                    using (SQLiteCommand selectCommand = new SQLiteCommand(loadCheevos, Database.sqliteCon))
+                    {
+                        selectCommand.Parameters.AddWithValue("@id", id);
+                        selectCommand.Parameters.AddWithValue("@user", user);
+
+                        using (SQLiteDataReader dataReader = selectCommand.ExecuteReader())
+                        {
+                            ret = dataReader.HasRows;
+                        }
+                    }
                 }
-                sqliteCon.Close();
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message + " " + ex.StackTrace);
+                }
+                finally
+                {
+                    if (dbOpened)
+                    {
+                        Database.sqliteCon.Close();
+                    }
+                }
             }
             return ret;
         }
@@ -176,40 +248,74 @@ namespace CheevoService
         public static bool ProposeCheevo(string user, string proposes, int id)
         {
             bool ret = false;
+            bool dbOpened = false;
 
-            string cmd;
+            // complete it
+            const string completeIt = "update popped_cheevos set SecondMod = @user, AwardedTime = @awarded where CheevoID = @cheevoID and User = @proposes";
 
-            if (CheevoAlreadyProposed(proposes, id))
-            {
-                // complete it
-                cmd = string.Format("update popped_cheevos set SecondMod = '{0}', AwardedTime = '{1}' where CheevoID = {2} and User = '{3}'", user, DateTime.Now.Ticks, id, proposes);
-            }
-            else
-            {
-                // add it
-                cmd = string.Format("insert into popped_cheevos (ID, CheevoID, User, ProposedTime, FirstMod) VALUES (NULL, {0}, '{1}', '{2}', '{3}')", id, proposes, DateTime.Now.Ticks, user);
-            }
+            // add it
+            const string addIt = "insert into popped_cheevos (ID, CheevoID, User, ProposedTime, FirstMod) VALUES (NULL, @id, @proposes, @time, @user)";
 
             lock (sqliteCon)
             {
-                sqliteCon.Open();
-
-                using (SQLiteTransaction sqlTransaction = sqliteCon.BeginTransaction())
-                using (SQLiteCommand addCommand = new SQLiteCommand(cmd, sqliteCon, sqlTransaction))
+                try
                 {
-                    try
+                    string cmd;
+                    if (CheevoAlreadyProposed(proposes, id))
                     {
-                        addCommand.ExecuteNonQuery();
-                        sqlTransaction.Commit();
-                        ret = true;
+                        cmd = completeIt;
                     }
-                    catch
+                    else
                     {
-                        // do nothing, cheevo already added
+                        cmd = addIt;
+                    }
+
+                    sqliteCon.Open();
+                    dbOpened = true;
+
+                    using (SQLiteTransaction sqlTransaction = sqliteCon.BeginTransaction())
+                    {
+                        using (SQLiteCommand command = new SQLiteCommand(cmd, sqliteCon, sqlTransaction))
+                        {
+                            if (cmd == completeIt)
+                            {
+                                command.Parameters.AddWithValue("@user", user);
+                                command.Parameters.AddWithValue("@awarded", DateTime.Now.Ticks);
+                                command.Parameters.AddWithValue("@cheevoID", id);
+                                command.Parameters.AddWithValue("@proposes", proposes);
+                            }
+                            else
+                            {
+                                command.Parameters.AddWithValue("@id", id);
+                                command.Parameters.AddWithValue("@proposes", proposes);
+                                command.Parameters.AddWithValue("@time", DateTime.Now.Ticks);
+                                command.Parameters.AddWithValue("@user", user);
+                            }
+
+                            try
+                            {
+                                command.ExecuteNonQuery();
+                                sqlTransaction.Commit();
+                                ret = true;
+                            }
+                            catch
+                            {
+                                // do nothing, cheevo already added
+                            }
+                        }
                     }
                 }
-
-                sqliteCon.Close();
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message + " " + ex.StackTrace);
+                }
+                finally
+                {
+                    if (dbOpened)
+                    {
+                        Database.sqliteCon.Close();
+                    }
+                }
             }
 
             return ret;

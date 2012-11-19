@@ -10,7 +10,7 @@ namespace CheevoService
 {
     static class Program
     {
-        private static HTTPServer httpServer = new HTTPServer(5000);
+        private static HTTPServer httpServer = new HTTPServer(5001);
         private static CheevoTracker tracker;
 
         /// <summary>
@@ -26,6 +26,8 @@ namespace CheevoService
             //ServiceBase.Run(ServicesToRun);
 
             var dbFilename = Properties.Settings.Default.ConnectionString.Replace("Data Source=", "");
+            dbFilename = dbFilename.Remove(dbFilename.IndexOf(";"));
+
             FileInfo dbFileInfo = new FileInfo(dbFilename);
 
             if (!dbFileInfo.Exists)
