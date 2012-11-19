@@ -163,7 +163,7 @@ namespace CheevoService
         {
             var dbCheevos = new Dictionary<string, CheevoUser>();
 
-            const string loadCheevos = "select Title,Description,Category,Points,AwardedTime,User " +
+            const string loadCheevos = "select Title,Description,Category,Points,AwardedTime,User,available_cheevos.ID " +
                                        "from popped_cheevos inner join available_cheevos on available_cheevos.ID = popped_cheevos.ID where AwardedTime is not null";
 
             bool dbOpened = false;
@@ -181,12 +181,21 @@ namespace CheevoService
                         while (dataReader.HasRows && dataReader.Read())
                         {
                             var myDate = new DateTime(dataReader.GetInt64(4));
-
-                            var awardedCheevo = new Cheevo(dataReader.GetString(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetInt32(3), myDate, -1);
                             var user = new CheevoUser(dataReader.GetString(5));
-                            user.Add(awardedCheevo);
 
-                            dbCheevos.Add(user.Username.ToLower(), user);
+                            if (!dbCheevos.ContainsKey(user.Username.ToLower()))
+                            {
+                                dbCheevos.Add(user.Username.ToLower(), user);
+                            }
+
+                            dbCheevos[user.Username.ToLower()].Add(
+                                new Cheevo(
+                                    dataReader.GetString(0), 
+                                    dataReader.GetString(1), 
+                                    dataReader.GetString(2), 
+                                    dataReader.GetInt32(3), 
+                                    myDate, 
+                                    dataReader.GetInt32(6)));
                         }
                     }
                 }

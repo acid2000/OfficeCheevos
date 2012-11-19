@@ -32,7 +32,7 @@ namespace CheevoService
 
         public bool ProposeCheevo(string user, string proposes, int id)
         {
-            // you can propose yourself
+            // you cannot propose yourself
             if (user == proposes)
             {
                 return false;
@@ -59,6 +59,12 @@ namespace CheevoService
                 }
             }
             return false;
+        }
+
+        public void ListUsersAsCSV(MemoryStream memStream)
+        {
+            var data = Encoding.ASCII.GetBytes(string.Join(",", userLookup.Keys));
+            memStream.Write(data, 0, data.Length);
         }
     }
 }

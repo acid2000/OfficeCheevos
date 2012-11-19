@@ -21,6 +21,7 @@ using System.Xml;
 using NotifyMessageDemo;
 using OfficeCheevosClient.Properties;
 using Timer = System.Timers.Timer;
+using System.Windows.Forms;
 
 namespace OfficeCheevosClient
 {
@@ -70,7 +71,7 @@ namespace OfficeCheevosClient
 
                     var msg = new NotifyMessage(
                         DefaultCheevoBackground,
-                        name, DefaultCheevoIcon, () => MessageBox.Show(""));
+                        name, DefaultCheevoIcon, () => System.Windows.Forms.MessageBox.Show(""));
                     var t = new Thread(() =>
                                        Dispatcher.Invoke(DispatcherPriority.Normal, new Action<NotifyMessage>(AddCheevo), msg));
                     t.Start();
@@ -93,7 +94,7 @@ namespace OfficeCheevosClient
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
-            var msg = new NotifyMessage(DefaultCheevoBackground, "Show popup on screen (100pts)", DefaultCheevoIcon, () => MessageBox.Show(""));
+            var msg = new NotifyMessage(DefaultCheevoBackground, "Show popup on screen (100pts)", DefaultCheevoIcon, () => System.Windows.Forms.MessageBox.Show(""));
             notifyMessageMgr.EnqueueMessage(msg);
         }
     }

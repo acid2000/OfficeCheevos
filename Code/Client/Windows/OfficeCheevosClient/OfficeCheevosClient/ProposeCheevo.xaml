@@ -1,0 +1,19 @@
+﻿<Window x:Class="OfficeCheevosClient.ProposeCheevo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Propose Cheevo" Height="144" Width="571">
+    <Grid Margin="0,0,0,-5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="411*"/>
+            <ColumnDefinition Width="136*"/>
+        </Grid.ColumnDefinitions>
+        <ComboBox x:Name="usersBox" HorizontalAlignment="Left" Margin="78,14,0,0" VerticalAlignment="Top" Width="138" IsEditable="True"/>
+        <Label Content="User
+               " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="63"/>
+        <ComboBox x:Name="cheevoListBox" HorizontalAlignment="Left" Margin="78,45,0,0" VerticalAlignment="Top" Width="459" Grid.ColumnSpan="2"/>
+        <Label Content="Cheevo
+               " HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="63"/>
+        <Button x:Name="proposeButton" Content="Propose" HorizontalAlignment="Left" Margin="78,76,0,0" VerticalAlignment="Top" Width="75" Height="20" IsEnabled="False" Click="proposeButton_Click"/>
+        <Button Content="Cancel" HorizontalAlignment="Left" Margin="158,76,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
+    </Grid>
+</Window>

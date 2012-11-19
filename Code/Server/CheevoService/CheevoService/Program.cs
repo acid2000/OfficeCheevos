@@ -85,8 +85,14 @@ namespace CheevoService
                     {
                         Cheevo.CheevosAsCSV(memStream);
                     }
+                    else if (context.Request.Url.LocalPath.StartsWith("/users"))
+                    {
+                        tracker.ListUsersAsCSV(memStream);
+                    }
                     else if (context.Request.Url.LocalPath.StartsWith("/nominate"))
                     {
+                        byte ret = (byte)'F';
+
                         var queryFull = context.Request.Url.Query.Split(new[] { "?" }, StringSplitOptions.RemoveEmptyEntries);
                         if (queryFull.Length == 3)
                         {
@@ -114,9 +120,14 @@ namespace CheevoService
 
                             if (!string.IsNullOrEmpty(user) && !string.IsNullOrEmpty(proposes) && cheevo != -1)
                             {
-                                tracker.ProposeCheevo(user, proposes, cheevo);
+                                if (tracker.ProposeCheevo(user, proposes, cheevo))
+                                {
+                                    ret = (byte)'T';
+                                }
                             }
                         }
+
+                        memStream.WriteByte(ret);
                     }
                 }
                 catch (Exception)

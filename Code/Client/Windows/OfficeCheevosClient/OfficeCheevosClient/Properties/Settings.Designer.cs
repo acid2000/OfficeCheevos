@@ -38,7 +38,7 @@ namespace OfficeCheevosClient.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:5000/listing?user=")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:5001/listing?user=")]
         public string serverRSSURL {
             get {
                 return ((string)(this["serverRSSURL"]));
@@ -56,6 +56,18 @@ namespace OfficeCheevosClient.Properties {
             }
             set {
                 this["lastUpdated"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:5001/")]
+        public string serverURL {
+            get {
+                return ((string)(this["serverURL"]));
+            }
+            set {
+                this["serverURL"] = value;
             }
         }
     }
