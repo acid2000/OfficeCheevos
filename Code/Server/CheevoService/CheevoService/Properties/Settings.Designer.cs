@@ -25,20 +25,20 @@ namespace CheevoService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=sample.s3db")]
-        public string ConnectionString {
+        [global::System.Configuration.DefaultSettingValueAttribute("TestCheevos")]
+        public string CheevoPacksDirectory {
             get {
-                return ((string)(this["ConnectionString"]));
+                return ((string)(this["CheevoPacksDirectory"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("TestCheevos")]
-        public string CheevoPacksDirectory {
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=sample.s3db;DateTimeFormat=Ticks")]
+        public string ConnectionString {
             get {
-                return ((string)(this["CheevoPacksDirectory"]));
+                return ((string)(this["ConnectionString"]));
             }
         }
     }
