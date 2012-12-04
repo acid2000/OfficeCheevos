@@ -71,6 +71,8 @@ namespace NotifyMessageDemo
         {
             var dispatcher = Application.Current.MainWindow.Dispatcher;
 
+            Application.Current.MainWindow.Activate();
+
             return Task.Factory.StartNew(() =>
             {
                 do
