@@ -41,5 +41,17 @@ namespace CheevoService.Properties {
                 return ((string)(this["ConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1")]
+        public string AddressToListenOn {
+            get {
+                return ((string)(this["AddressToListenOn"]));
+            }
+            set {
+                this["AddressToListenOn"] = value;
+            }
+        }
     }
 }

@@ -25,6 +25,7 @@ namespace CheevoService
             //};
             //ServiceBase.Run(ServicesToRun);
 
+            Console.WriteLine("Starting");
             var dbFilename = Properties.Settings.Default.ConnectionString.Replace("Data Source=", "");
             dbFilename = dbFilename.Remove(dbFilename.IndexOf(";"));
 
@@ -32,13 +33,22 @@ namespace CheevoService
 
             if (!dbFileInfo.Exists)
             {
+                Console.WriteLine("DB does not existing, creating");
                 Database.Setup();
+            }
+            else
+            {
+                Console.WriteLine("DB already exists");
             }
 
             foreach (var cheevoFile in Directory.GetFiles(Properties.Settings.Default.CheevoPacksDirectory))
             {
+                Console.WriteLine("Adding cheevo file: "+cheevoFile);
+
                 foreach (var cheevo in File.ReadAllLines(cheevoFile))
                 {
+                    Console.WriteLine("Adding cheevo");
+
                     //Test1,Test1Description,Test1Category,500
                     var data = cheevo.Split(new[] { ',' });
                     Database.AddCheevo(data[0], data[1], data[2], int.Parse(data[3]));
@@ -47,6 +57,7 @@ namespace CheevoService
 
             tracker = new CheevoTracker();
 
+            Console.WriteLine("Starting HTTP server");
             httpServer.OnNewResponse += processRequestResponse;
             httpServer.Start();
         }
@@ -56,6 +67,8 @@ namespace CheevoService
             var context = data as HttpListenerContext;
 
             HttpListenerResponse response = context.Response;
+
+            Console.WriteLine("New request: " + context.Request.Url.ToString());
 
             do
             {

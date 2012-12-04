@@ -12,5 +12,8 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=sample.s3db;DateTimeFormat=Ticks</Value>
     </Setting>
+    <Setting Name="AddressToListenOn" Type="System.String" Scope="User">
+      <Value Profile="(Default)">127.0.0.1</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

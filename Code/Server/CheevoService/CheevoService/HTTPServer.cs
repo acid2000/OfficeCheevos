@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CheevoService.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -17,7 +18,7 @@ namespace CheevoService
 
         public HTTPServer(int port)
         {
-            string prefix = "http://localhost:"+port+"/";
+            string prefix = string.Format("http://{0}:{1}/", Settings.Default.AddressToListenOn, port);
 
             httpListener = new HttpListener();
             httpListener.Prefixes.Add(prefix);
